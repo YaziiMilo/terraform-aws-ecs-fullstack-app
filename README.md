@@ -1,67 +1,205 @@
-# Todo App with Docker
+# Task Manager with AWS RDS and ECS
 
-A simple Todo application with React frontend, Express backend, and PostgreSQL database, all containerized with Docker.
+This project creates a complete web application stack in AWS using Terraform:
+- Amazon RDS MySQL database with public access
+- Express.js web application for task management with a modern Bootstrap UI
+- AWS ECS Fargate deployment with auto-scaling
 
-![Todo App Screenshot](./screenshot.png)
+## Application Features
+
+- Modern responsive UI built with Bootstrap
+- RESTful API for task management:
+  - List all tasks
+  - Create new tasks
+  - Delete existing tasks
+- Automatic database initialization
+- Health check endpoint for ECS
+
+## AWS Services Used
+
+This project utilizes the following AWS services:
+
+1. **Amazon RDS (Relational Database Service)**
+   - MySQL database engine
+   - Stores task data persistently
+   - Automatically handles backups and maintenance
+
+2. **Amazon ECS (Elastic Container Service)**
+   - Orchestrates and manages Docker containers
+   - Handles deployment, scaling, and management of the application
+
+3. **AWS Fargate**
+   - Serverless compute engine for containers
+   - Runs containers without managing servers or clusters
+
+4. **Amazon ECR (Elastic Container Registry)**
+   - Stores, manages, and deploys Docker container images
+   - Integrates with ECS for seamless deployment
+
+5. **Elastic Load Balancing (ALB)**
+   - Application Load Balancer to distribute traffic
+   - Routes HTTP requests to ECS tasks
+   - Performs health checks on the application
+
+6. **Amazon VPC (Virtual Private Cloud)**
+   - Provides isolated network infrastructure
+   - Manages subnets, route tables, and internet gateways
+
+7. **AWS IAM (Identity and Access Management)**
+   - Manages access permissions through roles
+   - ECS task execution role for container deployment
+
+8. **Amazon CloudWatch**
+   - Collects and tracks logs from ECS tasks
+   - Monitors application performance
+
+## Infrastructure Components
+
+- **Database Layer**: 
+  - RDS MySQL instance
+  - VPC, subnets, security groups for database access
+  
+- **Application Layer**:
+  - ECR repository for container images
+  - ECS Fargate cluster, tasks, and services
+  - CloudWatch logs integration
+  
+- **Networking Layer**:
+  - Application Load Balancer
+  - Target groups and listeners
+  - Security groups for network access
 
 ## Prerequisites
 
-- Docker Desktop installed and running
+- [Terraform](https://www.terraform.io/downloads.html) installed (v0.12+)
+- AWS credentials configured (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables or AWS CLI configured)
+- [Docker](https://www.docker.com/get-started) installed (for building and pushing the application image)
+- [AWS CLI](https://aws.amazon.com/cli/) configured
 
-## Getting Started
+## Step-by-Step Deployment Guide
 
-1. Clone this repository
-2. Start the application:
-
-```bash
-docker-compose up
-```
-
-3. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000
-
-## Features
-
-- Create, read, update, and delete todo items
-- Mark todos as completed or active
-- Data persistence using PostgreSQL
-- Containerized deployment with Docker
-
-## Project Structure
+### 1. Clone the Repository
 
 ```
-.
-├── docker-compose.yml        # Docker Compose configuration
-├── frontend/                 # React frontend application
-│   ├── Dockerfile
-│   ├── public/
-│   └── src/
-├── backend/                  # Express backend API
-│   ├── Dockerfile
-│   ├── controllers/
-│   ├── models/
-│   └── routes/
+git clone <repository-url>
+cd appwithdb_ECS
 ```
 
-## API Endpoints
+### 2. Infrastructure Deployment
 
-- **GET /api/todos** - Get all todos
-- **GET /api/todos/:id** - Get a specific todo
-- **POST /api/todos** - Create a new todo
-- **PUT /api/todos/:id** - Update a todo
-- **DELETE /api/todos/:id** - Delete a todo
+1. Initialize Terraform:
+   ```
+   terraform init
+   ```
 
-## Stopping the Application
+2. Apply the infrastructure:
+   ```
+   terraform apply -auto-approve
+   ```
 
-To stop the application, press `Ctrl+C` in the terminal where it's running, or run:
+   This will create all necessary AWS resources including:
+   - VPC, subnets, and security groups
+   - RDS MySQL database
+   - ECR repository
+   - ECS cluster, task definition, and service
+   - Application Load Balancer
 
-```bash
-docker-compose down
+3. Note the outputs:
+   ```
+   terraform output
+   ```
+   
+   Key outputs include:
+   - `ecr_repository_url`: URL of the ECR repository
+   - `alb_dns_name`: DNS name of the Application Load Balancer
+   - `rds_endpoint`: Endpoint of the RDS instance
+
+### 3. Build and Push Docker Image
+
+1. Navigate to the app directory:
+   ```
+   cd app
+   ```
+
+2. Ensure the public directory exists:
+   ```
+   # For Linux/Mac
+   mkdir -p public
+   
+   # For Windows
+   New-Item -ItemType Directory -Force -Path public
+   ```
+
+3. Authenticate with Amazon ECR:
+   ```
+   # For Linux/Mac
+   aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <ecr-repository-url>
+   
+   # For Windows
+   aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <ecr-repository-url>
+   ```
+
+4. Build the Docker image:
+   ```
+   docker build -t <ecr-repository-url>:latest .
+   ```
+
+5. Push the image to ECR:
+   ```
+   docker push <ecr-repository-url>:latest
+   ```
+
+### 4. Access the Application
+
+1. Wait a few minutes for the ECS service to pull the image and start the tasks
+2. Access the application at the ALB DNS name:
+   ```
+   http://<alb-dns-name>
+   ```
+   
+   For example: `http://task-manager-alb-123456789.us-east-1.elb.amazonaws.com`
+
+### 5. Test the Application
+
+1. Add tasks using the form on the left
+2. View and delete tasks on the right
+3. The tasks are stored in the RDS MySQL database
+
+## Windows-Specific Instructions
+
+If you're using Windows, use PowerShell commands:
+
+```powershell
+# Get terraform outputs
+$ECR_REPO_URL = terraform output -raw ecr_repository_url
+$AWS_REGION = terraform output -raw aws_region
+$ACCOUNT_ID = aws sts get-caller-identity --query Account --output text
+
+# Create directories if they don't exist
+if (-not (Test-Path -Path app/public)) { New-Item -ItemType Directory -Force -Path app/public }
+
+# Authenticate with ECR
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URL
+
+# Build and push Docker image
+cd app
+docker build -t $ECR_REPO_URL:latest .
+docker push $ECR_REPO_URL:latest
 ```
 
-To completely remove the volumes (database data) as well:
+## Clean Up
 
-```bash
-docker-compose down -v
-``` 
+To tear down all resources and avoid incurring charges:
+
+```
+terraform destroy -auto-approve
+```
+
+## Security Note
+
+This configuration creates resources with public access for demonstration purposes. For production environments:
+
+1. Use private subnets for the RDS instance and ECS tasks
+2. Restrict security group access to specific IP ranges
+3. Add a proper authentication system to the application
+4. Consider using AWS Secrets Manager for storing database credentials

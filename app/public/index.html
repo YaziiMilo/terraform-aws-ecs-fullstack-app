@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { 
+            padding-top: 20px; 
+            background-color: #f8f9fa;
+        }
+        .task-card {
+            margin-bottom: 15px;
+            border-left: 4px solid #0d6efd;
+        }
+        .task-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-12 text-center">
+                <h1 class="mb-3">Task Manager</h1>
+                <p class="text-muted">AWS ECS & RDS Demo Application</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Task Form -->
+            <div class="col-md-4 mb-4">
+                <div class="form-container">
+                    <h3>Add New Task</h3>
+                    <form id="taskForm">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Add Task</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Task List -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">Tasks</h3>
+                        <button id="refreshBtn" class="btn btn-sm btn-outline-primary">Refresh</button>
+                    </div>
+                    <div class="card-body task-container">
+                        <div id="taskList" class="list-group">
+                            <!-- Tasks will be added here -->
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading tasks...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load tasks when page loads
+            loadTasks();
+
+            // Add event listeners
+            document.getElementById('taskForm').addEventListener('submit', addTask);
+            document.getElementById('refreshBtn').addEventListener('click', loadTasks);
+        });
+
+        // Load tasks from API
+        async function loadTasks() {
+            const taskList = document.getElementById('taskList');
+            
+            try {
+                taskList.innerHTML = `
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading tasks...</p>
+                    </div>
+                `;
+                
+                const response = await fetch('/tasks');
+                const tasks = await response.json();
+                
+                if (tasks.length === 0) {
+                    taskList.innerHTML = `
+                        <div class="text-center py-5">
+                            <p class="text-muted">No tasks found. Add your first task!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                taskList.innerHTML = '';
+                tasks.forEach(task => {
+                    const date = new Date(task.created_at).toLocaleString();
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'card task-card mb-3';
+                    taskElement.innerHTML = `
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title">${escapeHtml(task.title)}</h5>
+                                <button class="btn btn-sm btn-danger delete-btn" data-id="${task.id}">Delete</button>
+                            </div>
+                            <p class="card-text">${escapeHtml(task.description || 'No description')}</p>
+                            <small class="text-muted">Created: ${date}</small>
+                        </div>
+                    `;
+                    
+                    // Add delete event listener
+                    taskList.appendChild(taskElement);
+                    taskElement.querySelector('.delete-btn').addEventListener('click', function() {
+                        deleteTask(task.id);
+                    });
+                });
+                
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                taskList.innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        Error loading tasks. Please try again.
+                    </div>
+                `;
+            }
+        }
+
+        // Add a new task
+        async function addTask(e) {
+            e.preventDefault();
+            
+            const titleInput = document.getElementById('title');
+            const descriptionInput = document.getElementById('description');
+            
+            const title = titleInput.value.trim();
+            const description = descriptionInput.value.trim();
+            
+            if (!title) {
+                alert('Title is required');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/tasks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ title, description })
+                });
+                
+                if (response.ok) {
+                    // Clear form
+                    titleInput.value = '';
+                    descriptionInput.value = '';
+                    
+                    // Reload tasks
+                    loadTasks();
+                } else {
+                    const data = await response.json();
+                    alert(`Error: ${data.error || 'Failed to create task'}`);
+                }
+            } catch (error) {
+                console.error('Error creating task:', error);
+                alert('Error creating task. Please try again.');
+            }
+        }
+
+        // Delete a task
+        async function deleteTask(id) {
+            if (!confirm('Are you sure you want to delete this task?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/tasks/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadTasks();
+                } else {
+                    const data = await response.json();
+                    alert(`Error: ${data.error || 'Failed to delete task'}`);
+                }
+            } catch (error) {
+                console.error('Error deleting task:', error);
+                alert('Error deleting task. Please try again.');
+            }
+        }
+
+        // Helper function to escape HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+    </script>
+</body>
+</html> 
